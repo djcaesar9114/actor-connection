@@ -87,7 +87,7 @@ $(document).ready(function () {
     })
       .autocomplete( "instance" )._renderItem = function( ul, item ) {
       if (item == 0) {
-        return $('<li>No recult, click here to search by ID</li>').appendTo(ul)
+        return $('<li>No result, click here to search by ID</li>').appendTo(ul)
       }
       else {
         return $( "<li><table><tr><td><img src='https://image.tmdb.org/t/p/w45"+item.image+"'></td><td>"+item.name+"</td></tr></table></li>" ).appendTo(ul)
