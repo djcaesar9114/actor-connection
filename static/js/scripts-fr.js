@@ -148,18 +148,6 @@ $(document).ready(function () {
       return false
     }
 
-    /*
-    d'abord on a la table (deux colonnes) avec le nom de l'acteur et son image en dessous
-    pour chaque étape:
-      - on souligne en noir l'image de l'acteur (dans l'idéal une flèche vers la droite)
-      - dans la seconde colonne, on met "a joué dans", aligné en bas
-      - on rajoute une ligne, dans laquelle on met:
-        - première colonne: "dans lequel a joué", aligné en bas
-        - seconde colonne: [NOM DU FILM], avec en dessous l'image du film, celle cellule étant soulignée (dans l'idéal avec une flèche vers la gauche)
-      - on rajoute une ligne, dans laquelle on met:
-        - dans la première colonne: [NOM_ACTEUR], avec en dessous l'image
-    */
-
     $('#chemin').show()
     $('#chemin thead th').html("<img src='/static/images/connect_loader.gif' />")
     $('#chemin tbody').empty()

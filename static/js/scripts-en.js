@@ -66,7 +66,7 @@ $(document).ready(function () {
       minLength: 3,
       select: function(event, ui) {
         if (ui.item == 0) {
-          // on affiche ici le formulaire pour rechercher par identifiant
+          // we display the form to search by ID
           $('#modalRechercheID').modal('show')
           $('#modalRechercheID .acteur').val(el.attr('id').split('_')[1])
         }
@@ -130,35 +130,23 @@ $(document).ready(function () {
   })
 
   $('#connect').on('click', function(e) {
-    // on vérifie que deux acteurs ont bien été sélectionnés
+    // we check that 2 actors have been selected
     if ($(".acteurChoisi").map(function() { return this.value }).get().reduce((a, b)=> a * b.length,1) == 0) {
       alert("Select two actors, butthead!")
       return false
     }
 
-    // on vérifie que le format soit bon
+    // we check that the format of the actors is correct
     if (!checkJSON($('#acteurInitial').val()) || !checkJSON($('#acteurFinal').val())) {
       alert("The format of the actors is incorrect.")
       return false
     }
 
-    // on vérifie si les deux acteurs sont les mêmes
+    // we check if both actors are the same
     if (JSON.parse($('#acteurInitial').val()).id == JSON.parse($('#acteurFinal').val()).id) {
       alert("Select two different actors, butthead!")
       return false
     }
-
-    /*
-    d'abord on a la table (deux colonnes) avec le nom de l'acteur et son image en dessous
-    pour chaque étape:
-      - on souligne en noir l'image de l'acteur (dans l'idéal une flèche vers la droite)
-      - dans la seconde colonne, on met "a joué dans", aligné en bas
-      - on rajoute une ligne, dans laquelle on met:
-        - première colonne: "dans lequel a joué", aligné en bas
-        - seconde colonne: [NOM DU FILM], avec en dessous l'image du film, celle cellule étant soulignée (dans l'idéal avec une flèche vers la gauche)
-      - on rajoute une ligne, dans laquelle on met:
-        - dans la première colonne: [NOM_ACTEUR], avec en dessous l'image
-    */
 
     $('#chemin').show()
     $('#chemin thead th').html("<img src='/static/images/connect_loader.gif' />")
