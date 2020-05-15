@@ -43,7 +43,7 @@ app.get('/acteur', (req, res) => {
 
   console.log("Acteur recherché: " + req.query.term)
   var retourActeurs = []
-  https.get('https://api.themoviedb.org/3/search/person?api_key=' + CLE + '&query=' + req.query.term + '&include_adult=false', (resp) => {
+  https.get('https://api.themoviedb.org/3/search/person?api_key=' + CLE + '&query=' + req.query.term + '&include_adult=true', (resp) => {
     let data = '';
     resp.on('data', (chunk) => { data += chunk })
     resp.on('end', () => {
