@@ -82,7 +82,10 @@ app.get('/id/:id/:source', (req, res) => {
       if (typeof acteur === 'undefined') {
         res.send({
           reponse: 'ko',
-          message: "Aucun acteur trouvé."
+          message: {
+            fr: "Aucun acteur trouvé.",
+            en: "No actor found."
+          }
         })
       }
       else {

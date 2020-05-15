@@ -64,6 +64,7 @@ $(document).ready(function () {
     el.autocomplete({
       source: "/acteur",
       minLength: 3,
+      delay: 1000,
       select: function(event, ui) {
         if (ui.item == 0) {
           // we display the form to search by ID
@@ -115,7 +116,7 @@ $(document).ready(function () {
     request.done(function(result) {
       elt.removeAttr('disabled')
       $('#spinnerRechercheID').hide()
-      if (result.reponse == 'ko') { alert(result.message) }
+      if (result.reponse == 'ko') { alert(result.message.en) }
       else {
         $('#validActeur').show()
         $('#retourActeur').show()
