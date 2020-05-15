@@ -106,226 +106,11 @@ app.get('/id/:id/:source', (req, res) => {
 })
 
 
-var fin = false
-var retourFonction
-
-async function verifFilmdActeur(parametres, chemin, acteur) {
-  console.log("ACTEUR VERIFIÉ: "+ acteur.name);
-  /*
-    Cette fonction récursive permet de vérifier si un acteur a joué dans un film dans lequel a également joué l'acteur que l'on cherche.
-    Si ce n'est pas le cas, la fonction fait appel à elle-même pour chercher parmi les acteurs des films trouvés.
-
-    La fonction prend deux arguments:
-      - le "chemin" qui contient l'ensemble des films et acteurs parcourus, qui est de la forme:
-        [
-          {
-            acteur: {
-              id: ,
-              name: ,
-              image:
-            },
-            film: {
-              id: ,
-              name: ,
-              image:
-            }
-          }
-        ]
-      - l' "acteur", qui est celui dont on va vérifier la liste de films
-  */
-
-  /*
-    on récupère les films de l'acteur
-    https://api.themoviedb.org/3/person/{person_id}/movie_credits?api_key=<<api_key>>&language=en-US
-    on prend la partie "cast" et pour chaque on prend "id", "title" et "poster_path"
-  */
-  if (fin == true) { console.log("STOP"); return false }
-  https.get('https://api.themoviedb.org/3/person/' + acteur.id + '/movie_credits?api_key=' + CLE + '&language=' + parametres.lang, (resp) => {
-    if (fin == true) { console.log("STOP"); return false }
-    let data = ''
-    var filmsdelacteur = []
-    resp.on('data', (chunk) => { data += chunk })
-    resp.on('end', () => {
-      // console.log("CAST: " + JSON.parse(data).cast)
-      var cast = JSON.parse(data).cast
-      cast.forEach(function(film) {
-        // console.log("TITRE: "+film.title);
-        if (film.release_date) {
-          var dateFilm = film.release_date.split('-').join('')
-          var votesFilm = film.vote_average
-          if ((((votesFilm - parametres.filtreFilms.votesMin)*(parametres.filtreFilms.votesMax - votesFilm)) >= 0) && (((dateFilm - parametres.filtreFilms.dateMin)*(parametres.filtreFilms.dateMax - dateFilm)) >= 0)) {
-            filmsdelacteur.push({
-              id: film.id,
-              title: film.title,
-              image: film.poster_path,
-              date: dateFilm,
-              vote: film.vote_average,
-              popularity: film.popularity
-            })
-          }
-        }
-      })
-
-      // opérations de tri si c'est demandé par l'utilisateur
-      filmsdelacteur.sort(function(a,b) {
-        return parametres.nbFilms.ordre * (a[parametres.nbFilms.type] - b[parametres.nbFilms.type])
-      })
-
-      // découpage du nombre de films demandé
-      filmsdelacteur = filmsdelacteur.splice(0,parametres.nbFilms.nb)
-
-      // pour chaque film, on récupère les acteurs
-      filmsdelacteur.forEach(function(film) {
-        console.log("FILM VÉRIFIÉ: " + film.title + ' / ' + listeFilms[film.id])
-        // si on a déjà parcouru le film de manière plus courte, on s'arrête
-        if (listeFilms[film.id] && listeFilms[film.id] < chemin.length) { return false }
-        // sinon on retient qu'on l'a fait
-        listeFilms[film.id] = chemin.length
-
-        /*
-          on récupère les acteurs du film
-          https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>
-          on prend la partie "cast" et pour chaque on prend "id", "name", "profile_path" et "order"
-        */
-        if (fin == true) { console.log("STOP"); return false }
-        https.get('https://api.themoviedb.org/3/movie/' + film.id + '/credits?api_key=' + CLE, (respAct) => {
-          if (fin == true) { console.log("STOP"); return false }
-          let dataAct = '';
-          respAct.on('data', (chunk) => { dataAct += chunk; })
-          respAct.on('end', () => {
-            var acteurs = []
-            console.log("FILM regardé: " + film.title);
-            console.log("DATA2: " + JSON.parse(dataAct).cast.map(x=> x.name))
-            var cast2 = JSON.parse(dataAct).cast
-            cast2.forEach(function(act) {
-              // si l'ordre de l'acteur dans le du casting est dans les critères du nombre d'acteurs par film souhaité
-              if ((act.order < parametres.nbActeurs) && (Object.keys(listeActeurs).indexOf(act.id) < 0)) {
-                acteurs.push({
-                  id: act.id,
-                  name: act.name,
-                  image: act.profile_path
-                })
-              }
-            })
-
-            // si l'acteur final est dans le film, on renvoie la chaîne
-            if (typeof acteurs.find(element => element.id == parametres.acteurFinal.id) !== 'undefined') {
-              fin = true
-              console.log("\nFIN: \n" + JSON.stringify(acteurs))
-              console.log("\nFILM FIN: " + JSON.stringify(film))
-              // console.log(" --? " + (typeof acteurs.find(element => element.id == parametres.acteurFinal.id) !== 'undefined'));
-              // console.log(" --> " + acteurs.find(element => element.id == parametres.acteurFinal.id));
-              retourFonction = chemin.concat([{acteur: acteurs.find(element => element.id == parametres.acteurFinal.id), film: film}])
-              return true
-              //return (chemin.concat([{acteur: acteurs.find(element => element.id == parametres.acteurFinal.id), film: film}]))
-            }
-            else {
-              // si on a parcouru la longueur maximale tolérée, on renvoie un échec
-              if (chemin.length > parametres.profondeur) {
-                console.log("\nFIN3: " + chemin.length + ' / ' + parametres.profondeur)
-                return false
-              }
-              else {
-                console.log("\nFIN4: " + chemin.length + ' / ' + parametres.profondeur)
-                // pour chaque acteur, on va regarder sa liste de films de manière récursive
-                acteurs.forEach(function(act) {
-                  // on regarde si l'acteur doit être pris en compte selon le paramètre du nombre d'acteurs à rechercher par film
-                  if (act.order > parametres.nbActeurs) { return false }
-
-                  // si on a déjà parcouru l'acteur de manière plus courte, on s'arrête
-                  if (listeActeurs[act.id] && listeActeurs[act.id] < chemin.length) { return false }
-                  // sinon on retient qu'on l'a fait
-                  listeActeurs[act.id] = chemin.length
-
-                  var retour = verifFilmdActeur(parametres, chemin.concat([{acteur: act, film: film}]), act)
-                  if (!retour) { return retour }
-                })
-              }
-            }
-          })
-        }).on("error", (err) => {
-            console.log("[ERREUR ACTEUR] ", err.message)
-        })
-      })
-    })
-  }).on("error", (err) => {
-    console.log("[ERREUR FILM] " + err.message)
-    return false
-  })
-}
-
-app.post('/comparaison2/', (req, res) => {
-  console.log("Comparaison recherchée: " + JSON.stringify(req.body))
-
-  /*
-    On doit avoir:
-    {
-      acteurInitial: {
-        id: xxx1,
-        name: yyy1,
-        image: zzz1
-      },
-      acteurFinal: {
-        id: xxx2,
-        name: yyy2,
-        image: zzz2
-      },
-      profondeur: z1,   // longueur maximale du chemin reliant les acteurs
-      nbFilms: {
-        nb: z21,        // nombre de films maximum à vérifier par acteur
-        ordre: z22,     // dans l'ordre descendant ou ascendant ('1' ou '-1')
-        type: z23       // type de classement ('vote', 'date' ou 'popularity')
-      },
-      filtreFilms: {
-        dateMin: z31,   // date minimale du film
-        dateMax: z32,   // date maximale du film
-        votesMin: z33,  // note minimale du film
-        votesMax: z34   // note maximale du film
-      },
-      nbActeurs: z4     // nombre d'acteurs maximum à vérifier par film, par ordre d'apparence dans le casting
-    }
-  */
-
-  var parametres = {
-    acteurFinal: JSON.parse(req.body.acteurFinal),
-    profondeur: req.body.profondeur,
-    nbFilms: req.body.nbFilms,
-    filtreFilms: req.body.filtreFilms,
-    nbActeurs: req.body.nbActeurs,
-    lang: req.body.lang
-  }
-
-  // on met des valeurs plafond pour éviter une surcharge de la consommation des API
-  parametres.nbFilms.nb = Math.min(parametres.nbFilms.nb, 20)
-  parametres.nbActeurs = Math.min(parametres.nbActeurs, 20)
-  parametres.profondeur = Math.min(parametres.profondeur, 10)
-
-  // on vérifie qu'il ne s'agit pas du même acteur
-  var acteurInitial = JSON.parse(req.body.acteurInitial)
-  if (acteurInitial.id == req.body.acteurFinal.id) {
-    res.send()
-  } else {
-    fin = false
-    // var cheminFinal = await verifFilmdActeur(parametres, [], acteurInitial)
-    // res.send(cheminFinal)
-    verifFilmdActeur(parametres, [], acteurInitial).then(res.send(retourFonction))
-  }
-})
-
-/*
-
-
-
-// pour avoir la première Promise réalisée: https://stackoverflow.com/questions/39940152/get-first-fulfilled-promise
-const invert  = p  => new Promise((res, rej) => p.then(rej, res));
-const firstOf = ps => invert(Promise.all(ps.map(invert)));
-
-*/
-
 // sert à voir quand on a trouvé un chemin reliant les deux acteurs
 var cheminTrouve = false
 
 // pour trouver la première promesse qui se résoud
+// source: https://stackoverflow.com/questions/39940152/get-first-fulfilled-promise
 const invert          = p  => new Promise((res, rej) => p.then(rej, res))
 const firstOf         = ps => invert(Promise.all(ps.map(invert)))
 const retourPremiere  = p  => p.then(v => resolve(v), v => reject(v))
@@ -417,6 +202,32 @@ const getActeurs = (film, parametres) => {
 }
 
 const getLiaison = (act1, act2, chemin, parametres) => {
+
+  /*
+    Cette fonction récursive permet de vérifier si un acteur a joué dans un film dans lequel a également joué l'acteur que l'on cherche.
+    Si ce n'est pas le cas, la fonction fait appel à elle-même pour chercher parmi les acteurs des films trouvés.
+
+    La fonction prend 4 arguments:
+      - l'acteur de début
+      - l'acteur de fin
+      - le "chemin" qui contient l'ensemble des films et acteurs parcourus, qui est de la forme:
+        [
+          {
+            acteur: {
+              id: ,
+              name: ,
+              image:
+            },
+            film: {
+              id: ,
+              name: ,
+              image:
+            }
+          }
+        ]
+      - les paramètres
+  */
+
   return new Promise((resolve, reject) => {
     getFilms(act1, parametres).then((films) => {
       // on chope les acteurs de tous
@@ -432,7 +243,7 @@ const getLiaison = (act1, act2, chemin, parametres) => {
                   cheminTrouve = true
                   console.log("ACTEUR TROUVÉ: " + JSON.stringify(acteur) + '\nDANS LE FILM: ' + JSON.stringify(film))
                   console.log("ON VA RESOLVE: " + JSON.stringify(retour))
-                  resolve()
+                  resolve(retour)
                 }
                 else {
                   if (chemin.length >= parametres.profondeur) {
@@ -474,8 +285,6 @@ const getLiaison = (act1, act2, chemin, parametres) => {
     })
   })
 }
-
-
 
 app.post('/comparaison/', (req, res) => {
   console.log("Comparaison recherchée: " + JSON.stringify(req.body))
