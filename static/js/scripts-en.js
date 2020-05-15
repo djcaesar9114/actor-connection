@@ -179,6 +179,7 @@ $(document).ready(function () {
     request.done(function(result) {
       if (result.reponse == 'ok') {
         if (!result.chemin || result.chemin.length == 0) {
+          $('#chemin thead th').addClass('bg-danger')
           $('#chemin thead th').text("Server response error.")
           return false
         }
@@ -194,13 +195,15 @@ $(document).ready(function () {
         tab.find('tr:last td:last').empty()
       } else {
         if (result.reponse == 'ko') {
+          $('#chemin thead th').addClass('bg-danger')
           $('#chemin thead th').text(result.message)
         }
         else { $('#chemin thead th').text("Server response format error.") }
       }
     })
     request.fail(function(jqXHR, textStatus, errorThrown) {
-      alert('ERROR: ' + textStatus + '\n' + errorThrown)
+      $('#chemin thead th').addClass('bg-danger')
+      $('#chemin thead th').text('ERROR: ' + textStatus + '\n' + errorThrown)
     })
   })
 

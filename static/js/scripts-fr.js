@@ -150,6 +150,7 @@ $(document).ready(function () {
     }
 
     $('#chemin').show()
+    $('#chemin thead th').removeClass('bg-danger')
     $('#chemin thead th').html("<img src='/static/images/connect_loader.gif' />")
     $('#chemin tbody').empty()
 
@@ -179,6 +180,7 @@ $(document).ready(function () {
     request.done(function(result) {
       if (result.reponse == 'ok') {
         if (!result.chemin || result.chemin.length == 0) {
+          $('#chemin thead th').addClass('bg-danger')
           $('#chemin thead th').text("Erreur du format de la réponse du serveur.")
           return false
         }
@@ -194,13 +196,15 @@ $(document).ready(function () {
         tab.find('tr:last td:last').empty()
       } else {
         if (result.reponse == 'ko') {
+          $('#chemin thead th').addClass('bg-danger')
           $('#chemin thead th').text(result.message)
         }
         else { $('#chemin thead th').text("Erreur du format de la réponse du serveur.") }
       }
     })
     request.fail(function(jqXHR, textStatus, errorThrown) {
-      alert('ERREUR: ' + textStatus + '\n' + errorThrown)
+      $('#chemin thead th').addClass('bg-danger')
+      $('#chemin thead th').text('ERREUR: ' + textStatus + '\n' + errorThrown)
     })
   })
 
