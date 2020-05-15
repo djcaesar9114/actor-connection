@@ -3,6 +3,7 @@ TODO
 
 - cors pour l'API d'acteurs et de comparaison
 - pour les images: https://developers.themoviedb.org/3/getting-started/images (w45 ou w185 pour les personnes et w92 ou w154 pour les films)
+- liste des acteurs et des films parcourus
 
 */
 
@@ -20,11 +21,6 @@ app.use(favicon(__dirname + '/static/images/favicon_io/favicon.ico'))
 
 const https = require('https')
 const CLE = require('./cles.key').keys.v3
-
-// contiendra la liste des acteurs parcourus ainsi que pour chacun le nombre d'étapes minimales pour y arriver
-var listeActeurs = {}
-// idem pour les films
-var listeFilms = {}
 
 app.get('/', function (req, res) {
   res.render('index-en')
@@ -108,6 +104,11 @@ app.get('/id/:id/:source', (req, res) => {
 
 // sert à voir quand on a trouvé un chemin reliant les deux acteurs
 var cheminTrouve = false
+
+// contiendra la liste des acteurs parcourus ainsi que pour chacun le nombre d'étapes minimales pour y arriver
+var listeActeurs = {}
+// idem pour les films
+var listeFilms = {}
 
 // pour trouver la première promesse qui se résoud
 // source: https://stackoverflow.com/questions/39940152/get-first-fulfilled-promise
