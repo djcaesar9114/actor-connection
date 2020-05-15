@@ -4,8 +4,7 @@
 
 ## What is it?
 
-"Actor connection" is an app allowing you to look for connections between actors depending on th movies they played in.
-For example:
+"Actor connection" is an app allowing you to look for connections between actors depending on th movies they played in. For example:
 
 * Jim Carrey and Renée Zellweger are connected through 1 movie (Me, Myself and Irene);
 * Jim Carrey and Hugh Grant are connected through 2 movies (you get from Jim Carrey to Renée Zellweger with "My, Myself and Irene" and from Renée Zellweger to Hugh Grant with "Bridget Jones", because Jim Carrey and Hugh Grant have never played together).
