@@ -1,0 +1,45 @@
+html,
+body {
+  height: 100%;
+}
+
+#navbar img.hover {
+  display: none !important;
+}
+#navbar:hover img.hover {
+  display: inline !important;
+}
+#navbar:hover img.nonhover {
+  display: none !important;
+}
+
+#page-content {
+  flex: 1 0 auto;
+}
+
+#sticky-footer {
+  flex-shrink: none;
+}
+
+#custom-handle {
+  width: 3em;
+  height: 1.6em;
+  top: 50%;
+  margin-top: -.8em;
+  text-align: center;
+  line-height: 1.6em;
+}
+
+#chemin {
+  display: none;
+}
+
+.ui-autocomplete-loading { background:url('/static/images/loader.gif') no-repeat right center }
+
+.ui-menu img{
+  height:40px;
+}
+.ui-menu td {
+  white-space:nowrap;
+  vertical-align: middle;
+}

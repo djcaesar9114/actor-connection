@@ -1,0 +1,16 @@
+{
+  "name": "actor-connection",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DJ Caësar 9114",
+  "license": "ISC",
+  "description": "Check what are the connections between two actors depending on the movies they or their colleagues played in.",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^2.0.4",
+    "serve-favicon": "^2.5.0"
+  }
+}

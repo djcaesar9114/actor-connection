@@ -1,0 +1,147 @@
+html(lang="en")
+  head
+    title Actor Connection
+    meta(charset="utf-8")
+
+    //- Jquery
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css", rel="stylesheet")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js")
+
+    //- Bootstrap
+    link(rel="stylesheet",href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk", crossorigin="anonymous")
+    script(src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js", integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo", crossorigin="anonymous")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js", integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI", crossorigin="anonymous")
+    meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
+
+    //- Moment
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment.min.js")
+
+    //- Datepicker
+    link(rel="stylesheet", href="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css")
+    script(src="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js")
+    script(src="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/locales/bootstrap-datepicker.fr.min.js")
+
+    // Scripts propres
+    link(href="/static/css/style.css", rel="stylesheet")
+    script(src="/static/js/scripts-en.js")
+
+  body.d-flex.flex-column
+    header
+      nav.navbar.navbar-light.bg-light#navbar
+        a.navbar-brand(href="#") #[img.d-inline-block.align-top.nonhover(src="/static/images/logo_actor-connection.png" width="30", height="30", alt="")] #[img.d-inline-block.align-top.hover(src="/static/images/logo_actor-connection_favicon.png" width="30", height="30", alt="")] #[span Actor connection]
+        ul.nav.navbar-nav.navbar-right
+          li
+            a(href="/fr")
+              img(src="/static/images/fr.png" height="20px")
+    main.container.text-center(role="main")#page-content
+      div.row.justify-content-center
+        div.text-center
+          table.table.text-center
+            thead
+              tr
+                th Actor 1
+                th Actor 2
+            tbody
+              tr
+                td
+                  input#search_Initial.acteurRecherche.form-control.text-center(type="text")
+                  br
+                  img#imageActeur_Initial
+                  br
+                  input#acteurInitial.acteurChoisi(type="hidden")
+                td
+                  input#search_Final.acteurRecherche.form-control.text-center(type="text")
+                  br
+                  img#imageActeur_Final
+                  br
+                  input#acteurFinal.acteurChoisi(type="hidden")
+          div.card
+            div.card-header.p-0#heading
+              h5.mb-0
+                button.btn.btn-link.btn-sm.collapsed.text-left(data-toggle="collapse" data-target="#parametres" aria-expanded="false" aria-controls="collapse") Parameters
+            div.card-body.collapse#parametres
+              div.form-group
+                p Maximum number of movies connecting the actors: #[span#profondeur 3]
+                div#slider-profondeur
+              div.form-group
+                p Movies' average vote: #[span#filtreFilmsvotesMin.sliderVotes(data-index="0") 60]% - #[span#filtreFilmsvotesMax.sliderVotes(data-index="1") 100]%
+                div#slider-votes
+              div.form-group
+                table
+                  tr
+                    td.pr-2 Movies released between:
+                    td
+                      div.input-daterange.input-group#datepicker
+                        div.input-group-prepend
+                          input.input-sm.form-control#filtreFilmsdateMin(type="text" name="start")
+                        span.input-group-text and
+                        div.input-group-append
+                          input.input-sm.form-control#filtreFilmsdateMax(type="text" name="end")
+              div.form-group
+                p Maximum number of actors for each movie, in the order of casting: #[span#nbActeurs 10]
+                div#slider-nbActeurs
+              div.form-group
+                p Maximum number of movies for each actor:
+                table.mx-auto
+                  tr
+                    td
+                      input#nbFilmsnb(type="number" name="nbFilmsnb" value="15" min="0" max="20" size="4")
+                    td.px-3
+                      div.form-check
+                        input.form-check-input#ordreFilmPlus(type="radio" name="nbFilmsOrdre" value="-1" checked)
+                        label.form-check-label(for="ordreFilmPlus") most
+                      div.form-check
+                        input.form-check-input#ordreFilmMoins(type="radio" name="nbFilmsOrdre" value="1")
+                        label.form-check-label(for="ordreFilmMoins") less
+                    td
+                      select.custom-select#nbFilmstype(name="nbFilmstype")
+                        option(value="date" selected) recent
+                        option(value="vote") rated
+                        option(value="popularity") popular
+
+          div.py-2
+            button.btn.btn-primary#connect How are the actors connected?
+
+        table.table.table-borderless.text-center#chemin
+          thead
+            tr
+              th(colspan="2")
+          tbody
+
+
+      div.modal.fade#modalRechercheID(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+        div.modal-dialog(role="document")
+          div.modal-content
+            div.modal-header
+              h5.modal-title#exampleModalLabel Search actor by ID
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") &times
+            div.modal-body
+              form#rechercheIDForm
+                div.form-group
+                  input#idRecherche(type="text" name="idRecherche" placeholder="identifiant à rechercher" size="40")
+                div.form-group
+                  select.custom-select#typeRecherche(name="typeRecherche")
+                    option(value="facebook" selected) Facebook
+                    option(value="twitter") Twitter
+                    option(value="instagram") Instagram
+                    option(value="imdb") IMDB
+                    option(value="freebase") Freebase
+                    option(value="tvrage") TV rage
+                    option(value="tvdb") TVDB
+                div.form-group
+                  button.btn.btn-success#rechercherIDBouton(type="button") #[span#spinnerRechercheID.spinner-border.spinner-border-sm(role="status" aria-hidden="true" style="display:none;")] Search
+              div#retourActeur(style="display: none;")
+                p.nomActeur
+                img.imageActeur
+                br
+                input.donneesActeur(type='hidden')
+                input.acteur(type='hidden')
+            div.modal-footer
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+              button.btn.btn-primary#validActeur(type="button" style="display: none;") Select
+
+    footer.page-footer.font-small.blue#sticky-footer
+      div.footer-copyright.text-center.py-3.bg-light.text-muted
+        small developed with love by #[a(href="https://djcaesar9114.com") DJ Caësar 9114]
