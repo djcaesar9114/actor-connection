@@ -1,8 +1,4 @@
-<p align="center">
-
 ![Actor connection][logo]
-
-</p>
 
 # actor-connection
 
@@ -43,11 +39,7 @@ You have to select 2 actors, change the parameters or not, then click on the but
 
 To select the actors, try to enter their names directly. If the app doesn't find the actor you're looking for, you can search by ID if the actor has a profile on a social media or a IMDB entry.
 
-<p align="center">
-
 > ![Actor selection][step01]
-
-</p>
 
 ### Parameters
 
@@ -59,11 +51,7 @@ You can modify the way the algorithm is working:
 * __Maximum number of actors for each movie, in the order of casting__: number of actors by movie to be considered. _(defaut: 10)_
 * __Maximum number of movies for each actor__: number of movies by actor to be considered. _(defaut: 15 most recent)_
 
-<p align="center">
-
 > ![Parameters][step02]
-
-</p>
 
 ### Connection search
 
