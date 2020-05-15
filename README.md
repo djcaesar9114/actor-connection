@@ -1,4 +1,4 @@
-> ![Actor connection][logo]
+![Actor connection][logo]
 
 # actor-connection
 
