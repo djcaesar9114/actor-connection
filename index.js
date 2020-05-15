@@ -1,22 +1,8 @@
 /*
 TODO
 
-- vérifier dans le client qu'il n'y a pas deux fois le même acteur
-- gérer les langues
 - cors pour l'API d'acteurs et de comparaison
 - pour les images: https://developers.themoviedb.org/3/getting-started/images (w45 ou w185 pour les personnes et w92 ou w154 pour les films)
-- créer le client:
-  acteur1, acteur2, paramètres
-- gérer le retour du client:
-  d'abord on a la table (deux colonnes) avec le nom de l'acteur et son image en dessous
-  pour chaque étape:
-    - on souligne en noir l'image de l'acteur (dans l'idéal une flèche vers la droite)
-    - dans la seconde colonne, on met "a joué dans", aligné en bas
-    - on rajoute une ligne, dans laquelle on met:
-      - première colonne: "dans lequel a joué", aligné en bas
-      - seconde colonne: [NOM DU FILM], avec en dessous l'image du film, celle cellule étant soulignée (dans l'idéal avec une flèche vers la gauche)
-    - on rajoute une ligne, dans laquelle on met:
-      - dans la première colonne: [NOM_ACTEUR], avec en dessous l'image
 
 */
 
@@ -608,20 +594,6 @@ app.post('/comparaison/', (req, res) => {
       return true
     })
 
-    // getFilms({id: 4495, name: 'MDR LOL', image: '/ienbErTKd9RHCV1j7FJLNEWUAzn.jpg'}, parametres)
-    // .then((value) => {
-    //   console.log("-----");
-    //   console.log(value)
-    //   return getActeurs(value[0], parametres)
-    // })
-    // .then((value) => {
-    //   console.log("+++++");
-    //   console.log(value)
-    //   res.send(retour)
-    //   //console.log(value);
-    //   //setTimeout(function(){res.send(retour)},4000)
-    // })
-    //return true
   }
 })
 
