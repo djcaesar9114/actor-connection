@@ -150,6 +150,7 @@ $(document).ready(function () {
     }
 
     $('#chemin').show()
+    $('#chemin thead th').removeClass('bg-danger bg-success')
     $('#chemin thead th').html("<img src='/static/images/connect_loader.gif' />")
     $('#chemin tbody').empty()
 
@@ -183,6 +184,7 @@ $(document).ready(function () {
           $('#chemin thead th').text("Server response error.")
           return false
         }
+        $('#chemin thead th').addClass('bg-success')
         $('#chemin thead th').text("The are connected through " + result.chemin.length + " movie(s).")
         var tab = $('#chemin tbody')
         var actInit = JSON.parse($('#acteurInitial').val())

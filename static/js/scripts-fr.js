@@ -150,7 +150,7 @@ $(document).ready(function () {
     }
 
     $('#chemin').show()
-    $('#chemin thead th').removeClass('bg-danger')
+    $('#chemin thead th').removeClass('bg-danger bg-success')
     $('#chemin thead th').html("<img src='/static/images/connect_loader.gif' />")
     $('#chemin tbody').empty()
 
@@ -184,6 +184,7 @@ $(document).ready(function () {
           $('#chemin thead th').text("Erreur du format de la réponse du serveur.")
           return false
         }
+        $('#chemin thead th').addClass('bg-success')
         $('#chemin thead th').text("Ils sont conectés par " + result.chemin.length + " film(s).")
         var tab = $('#chemin tbody')
         var actInit = JSON.parse($('#acteurInitial').val())
