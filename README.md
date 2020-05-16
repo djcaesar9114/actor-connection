@@ -57,6 +57,9 @@ You can modify the way the algorithm is working:
 
 Click on the button and voilà!
 
+> ![Connection search][step03]
+
 [logo]: ./static/images/logo_actor-connection_github.png "Actor connection"
 [step01]: ./static/images/readme/step01-actor_selection.gif "Actor selection"
 [step02]: ./static/images/readme/step02-parameters.gif "Parameters"
+[step03]: ./static/images/readme/step03-connection_search.gif "Connection search"
